@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\CurrencyValueController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,4 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(UserController::class)->group(function() {
     Route::get('user/create', 'create');
     Route::get('user/login', 'login');
+});
+
+Route::controller(CurrencyValueController::class)->group(function() {
+    Route::get('currency_value', 'showAll');
+    Route::get('currency_value/{name}', 'select');
+    Route::get('currency_value/update/{name}', 'update');
+    Route::get('currency_value/{name1}/{name2}/{amount}', 'convert');
 });
