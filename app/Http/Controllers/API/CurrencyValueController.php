@@ -20,7 +20,7 @@ class CurrencyValueController extends BaseController
     public function select(String $name) {
         return CurrencyValue::where('name', $name)->first();
     }
-
+    
     public function update(String $name, Request $request) {
         $data = $request->all();
         $currency = CurrencyValue::where('name', $name)->first();
