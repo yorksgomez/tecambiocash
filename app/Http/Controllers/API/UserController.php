@@ -48,6 +48,34 @@ class UserController extends BaseController
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
     }
 
+    public function createCashier(Request $request) {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'email_verified_at' => 'prohibited',
+            'password' => 'required',
+            'role' => 'prohibited',
+            'role_id' => 'prohibited',
+            'phone' => 'required',
+        ]);
+
+        if($validator->fails())
+            return $this->sendError('Error de validación', $validator->errors(), 400);
+
+        $data['role'] = 'CAJERO';
+        $data['role_id'] = 0;
+        $data['password'] = Hash::make($data['password']);
+
+        User::create($data);
+        return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
+    }
+
+    public function showCashiers(Request $request) {
+        return User::where('role', 'CAJERO')->get();
+    }
+
     public function login(Request $request) {
         
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
