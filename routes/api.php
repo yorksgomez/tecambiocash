@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::controller(UserController::class)->group(function() {
     Route::get('user/create', 'create');
     Route::get('user/cashier/create', 'createCashier');
-    Route::get('user/cashier/', 'showCashiers');
+    Route::get('user/cashier', 'showCashiers');
     Route::get('user/login', 'login');
 });
 

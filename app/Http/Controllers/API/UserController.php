@@ -58,7 +58,6 @@ class UserController extends BaseController
             'password' => 'required',
             'role' => 'prohibited',
             'role_id' => 'prohibited',
-            'phone' => 'required',
         ]);
 
         if($validator->fails())
