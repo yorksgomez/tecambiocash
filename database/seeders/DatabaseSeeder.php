@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'soporte@tecambiocash.com',
             'password' => Hash::make('Tecambiocash2023*CM'),
             'role' => 'ADMIN',
-            'role_id' => 0
+            'role_id' => 0,
+            'state' => "INACTIVE"
         ])->save();
 
         CurrencyValue::make(['name' => 'Paypal', 'value' => 0])->save();
