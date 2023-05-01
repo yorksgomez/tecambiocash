@@ -5,11 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController;
 use App\Models\Customer;
 use App\Models\User;
+use Faker\Core\File;
 use Illuminate\Http\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
@@ -40,6 +42,17 @@ class UserController extends BaseController
         $data['role'] = 'CLIENTE';
         $data['password'] = Hash::make($data['password']);
         $data['state'] = 'INACTIVE';
+        $accepted_extensions = ['png', 'jpg', 'jpeg'];
+
+        $filename = time();
+        $doc_image = $request->file('doc_image');
+        $customer_image = $request->file('customer_image');
+
+        if(in_array($doc_image->extension(), $accepted_extensions) && in_array($customer_image->extension(), $accepted_extensions)) 
+            return $this->sendError("FILE_EXTENSION_NOT_VALID", [], 403);
+
+        Storage::putFile("$filename-doc." . $doc_image->extension(), $doc_image);
+        Storage::putFile("$filename-profile" . $customer_image->extension(), $customer_image);
 
         $customer = Customer::make($data);
         $customer->save();
@@ -91,6 +104,30 @@ class UserController extends BaseController
             return $this->sendError('No autorizado', ['error' => 'No autorizado']);
         }
 
+    }
+
+    public function showUserDocImage(int $id) {
+        $image = User::find($id)->customer()->doc_image;
+
+        return response(
+            Storage::get($image),
+            200,
+            [
+                "Content-Type" => Storage::mimeType($image)
+            ]
+        );
+    }
+
+    public function showUserImage(int $id) {
+        $image = User::find($id)->customer()->customer_image;
+
+        return response(
+            Storage::get($image),
+            200,
+            [
+                "Content-Type" => Storage::mimeType($image)
+            ]
+        );
     }
 
 }

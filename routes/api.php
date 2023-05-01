@@ -25,6 +25,8 @@ Route::controller(UserController::class)->group(function() {
     Route::post('user/cashier/create', 'createCashier');
     Route::get('user/cashier', 'showCashiers');
     Route::post('user/login', 'login');
+    Route::get('user/{id}/doc-image', 'showUserDocImage');
+    Route::get('user/{id}/image', 'showUserImage');
 });
 
 Route::controller(CurrencyValueController::class)->group(function() {
