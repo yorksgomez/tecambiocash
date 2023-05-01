@@ -21,15 +21,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::controller(UserController::class)->group(function() {
-    Route::get('user/create', 'create');
-    Route::get('user/cashier/create', 'createCashier');
+    Route::post('user/create', 'create');
+    Route::post('user/cashier/create', 'createCashier');
     Route::get('user/cashier', 'showCashiers');
-    Route::get('user/login', 'login');
+    Route::post('user/login', 'login');
 });
 
 Route::controller(CurrencyValueController::class)->group(function() {
     Route::get('currency_value', 'showAll');
     Route::get('currency_value/{name}', 'select');
-    Route::get('currency_value/update/{name}', 'update');
+    Route::put('currency_value/{name}', 'update');
     Route::get('currency_value/{name1}/{name2}/{amount}', 'convert');
 });

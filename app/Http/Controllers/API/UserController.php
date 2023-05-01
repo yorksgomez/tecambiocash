@@ -23,7 +23,6 @@ class UserController extends BaseController
             'email' => 'required|email',
             'email_verified_at' => 'prohibited',
             'password' => 'required',
-            'c_password' => 'required|same:password',
             'role' => 'prohibited',
             'role_id' => 'prohibited',
             'country' => 'required',
@@ -32,6 +31,7 @@ class UserController extends BaseController
             'phone' => 'required',
             'doc_image' => 'required',
             'customer_image' => 'required',
+            'state' => 'prohibited'
         ]);
 
         if($validator->fails())
@@ -39,6 +39,7 @@ class UserController extends BaseController
 
         $data['role'] = 'CLIENTE';
         $data['password'] = Hash::make($data['password']);
+        $data['state'] = 'INACTIVE';
 
         $customer = Customer::make($data);
         $customer->save();
@@ -58,6 +59,7 @@ class UserController extends BaseController
             'password' => 'required',
             'role' => 'prohibited',
             'role_id' => 'prohibited',
+            'state' => 'prohibited'
         ]);
 
         if($validator->fails())
@@ -66,6 +68,7 @@ class UserController extends BaseController
         $data['role'] = 'CAJERO';
         $data['role_id'] = 0;
         $data['password'] = Hash::make($data['password']);
+        $data['state'] = 'INACTIVE';
 
         User::create($data);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
