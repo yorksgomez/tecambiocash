@@ -50,7 +50,7 @@ class UserController extends BaseController
 
         Log::info($doc_image->extension());
         Log::info($customer_image->extension());
-        if(in_array($doc_image->extension(), $accepted_extensions) && in_array($customer_image->extension(), $accepted_extensions)) 
+        if(!in_array($doc_image->extension(), $accepted_extensions) || !in_array($customer_image->extension(), $accepted_extensions)) 
             return $this->sendError("FILE_EXTENSION_NOT_VALID", [], 403);
 
         Storage::putFile("$filename-doc." . $doc_image->extension(), $doc_image);
