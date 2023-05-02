@@ -115,6 +115,13 @@ class UserController extends BaseController
 
     }
 
+    public function enableUser(int $id) {
+        $user = User::find($id);
+        $user->state = "ACTIVE";
+        $user->save();
+        $this->sendResponse("OK", "");
+    }
+    
     public function showUserDocImage(int $id) {
         $image = Customer::find(User::find($id)->role_id)->doc_image;
 
