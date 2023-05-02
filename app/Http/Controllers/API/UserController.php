@@ -52,7 +52,7 @@ class UserController extends BaseController
             return $this->sendError("FILE_EXTENSION_NOT_VALID", [], 403);
 
         $doc_image_name = "$filename-doc." . $doc_image->extension(); 
-        $profile_name = "$filename-profile";
+        $profile_name = "$filename-profile." . $customer_image->extension();
         Storage::putFile($doc_image_name, $doc_image);
         Storage::putFile($profile_name, $customer_image);
 
