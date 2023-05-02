@@ -48,6 +48,8 @@ class UserController extends BaseController
         $doc_image = $request->file('doc_image');
         $customer_image = $request->file('customer_image');
 
+        Log::info($doc_image->extension());
+        Log::info($customer_image->extension());
         if(in_array($doc_image->extension(), $accepted_extensions) && in_array($customer_image->extension(), $accepted_extensions)) 
             return $this->sendError("FILE_EXTENSION_NOT_VALID", [], 403);
 
