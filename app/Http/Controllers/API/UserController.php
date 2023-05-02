@@ -119,7 +119,7 @@ class UserController extends BaseController
         $user = User::find($id);
         $user->state = "ACTIVE";
         $user->save();
-        $this->sendResponse("OK", "");
+        return $this->sendResponse("OK", "");
     }
     
     public function showUserDocImage(int $id) {
