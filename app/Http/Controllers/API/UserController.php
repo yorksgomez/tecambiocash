@@ -98,7 +98,7 @@ class UserController extends BaseController
 
     public function login(Request $request) {
         
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if(Auth::attempt(['email' => $request->email, 'password' => $request->password, 'status' => 'ACTIVE'])) {
             $user = auth()->user();
             
             $success['token'] = $user->createToken('cliente')->plainTextToken;
