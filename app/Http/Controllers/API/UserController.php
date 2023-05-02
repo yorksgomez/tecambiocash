@@ -48,13 +48,16 @@ class UserController extends BaseController
         $doc_image = $request->file('doc_image');
         $customer_image = $request->file('customer_image');
 
-        Log::info($doc_image->extension());
-        Log::info($customer_image->extension());
         if(!in_array($doc_image->extension(), $accepted_extensions) || !in_array($customer_image->extension(), $accepted_extensions)) 
             return $this->sendError("FILE_EXTENSION_NOT_VALID", [], 403);
 
-        Storage::putFile("$filename-doc." . $doc_image->extension(), $doc_image);
-        Storage::putFile("$filename-profile" . $customer_image->extension(), $customer_image);
+        $doc_image_name = "$filename-doc." . $doc_image->extension(); 
+        $profile_name = "$filename-profile";
+        Storage::putFile($doc_image_name, $doc_image);
+        Storage::putFile($profile_name, $customer_image);
+
+        $data['doc_image'] = $doc_image_name;
+        $data['customer_image'] = $profile_name;
 
         $customer = Customer::make($data);
         $customer->save();
