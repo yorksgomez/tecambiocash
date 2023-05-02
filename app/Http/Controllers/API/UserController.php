@@ -53,8 +53,8 @@ class UserController extends BaseController
 
         $doc_image_name = "$filename-doc." . $doc_image->extension(); 
         $profile_name = "$filename-profile." . $customer_image->extension();
-        Storage::putFile($doc_image_name, $doc_image);
-        Storage::putFile($profile_name, $customer_image);
+        Storage::putFileAs("", $doc_image, $doc_image_name);
+        Storage::putFileAs("", $customer_image, $profile_name);
 
         $data['doc_image'] = $doc_image_name;
         $data['customer_image'] = $profile_name;
