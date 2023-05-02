@@ -5,12 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\API\BaseController;
 use App\Models\Customer;
 use App\Models\User;
-use Faker\Core\File;
 use Illuminate\Http\Request;
-use Illuminate\Log\Logger;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -86,7 +83,7 @@ class UserController extends BaseController
         $data['role'] = 'CAJERO';
         $data['role_id'] = 0;
         $data['password'] = Hash::make($data['password']);
-        $data['state'] = 'INACTIVE';
+        $data['state'] = 'ACTIVE';
 
         User::create($data);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
@@ -97,7 +94,9 @@ class UserController extends BaseController
     }
 
     public function showCustomers(Request $request) {
-        return User::where('role', 'CLIENTE ')->get();
+        $users = User::where('role', 'CLIENTE ');
+        $users->roleable();
+        return $users->get();
     }
 
     public function login(Request $request) {

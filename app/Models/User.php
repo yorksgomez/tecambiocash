@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -47,8 +48,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function roleable() : MorphTo {
-        return $this->morphTo(__FUNCTION__, 'role', 'role_id');
+    public function roleable() : HasOne {
+
+        if($this->role == "CLIENTE")
+            return $this->hasOne(Customer::class, 'id', 'role_id');
+        
+        return null;
     }
 
 }   
