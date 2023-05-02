@@ -112,7 +112,7 @@ class UserController extends BaseController
     }
 
     public function showUserDocImage(int $id) {
-        $image = User::find($id)->customer()->doc_image;
+        $image = User::find($id)->roleable()->doc_image;
 
         return response(
             Storage::get($image),
@@ -124,7 +124,7 @@ class UserController extends BaseController
     }
 
     public function showUserImage(int $id) {
-        $image = User::find($id)->customer()->customer_image;
+        $image = User::find($id)->roleable()->customer_image;
 
         return response(
             Storage::get($image),
