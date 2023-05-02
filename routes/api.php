@@ -24,6 +24,7 @@ Route::controller(UserController::class)->group(function() {
     Route::post('user/create', 'create');
     Route::post('user/cashier/create', 'createCashier');
     Route::get('user/cashier', 'showCashiers');
+    Route::get('user/customer', 'showCustomers');
     Route::post('user/login', 'login');
     Route::get('user/{id}/doc-image', 'showUserDocImage');
     Route::get('user/{id}/image', 'showUserImage');

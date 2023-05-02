@@ -96,6 +96,10 @@ class UserController extends BaseController
         return User::where('role', 'CAJERO')->get();
     }
 
+    public function showCustomers(Request $request) {
+        return User::where('role', 'CLIENTE ')->get();
+    }
+
     public function login(Request $request) {
         
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password, 'state' => 'ACTIVE'])) {
