@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-
+        
         User::make([
             'name' => 'ADMIN',
             'email' => 'soporte@tecambiocash.com',
@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'role_id' => 0,
             'state' => "ACTIVE"
         ])->save();
-
+        
         CurrencyValue::make(['name' => 'Paypal', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Advcash', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Bancolombia', 'value' => 0])->save();
@@ -52,6 +52,5 @@ class DatabaseSeeder extends Seeder
         CurrencyValue::make(['name' => 'Scotibank', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Banesco Panama', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Banco Venezuela', 'value' => 0])->save();
-
     }
 }
