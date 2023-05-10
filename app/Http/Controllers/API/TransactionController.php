@@ -53,7 +53,7 @@ class TransactionController extends BaseController
         $transactions = Transaction::where('status', 'ESPERA')->get();
         return $this->sendResponse($transactions, "OK");
     }
-    
+        
     public function take(int $transaction_id) {
         $user = auth()->user();
         $transaction = Transaction::find($transaction_id);
