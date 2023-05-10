@@ -22,7 +22,8 @@ class TransactionController extends BaseController
             'currency_id' => 'required',
             'type' => 'required',
             'user_taker' => 'prohibited',
-            'status' => 'prohibited'
+            'status' => 'prohibited',
+            'amount' => 'required'
         ]);
 
         if($validator->fails())

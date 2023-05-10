@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class, "user_from");
             $table->foreignIdFor(CurrencyValue::class, "currency_id");
             $table->foreignIdFor(User::class, "user_taker")->nullable();
+            $table->double("amount");
             $table->string("type");
             $table->string("status");
             $table->timestamps();

@@ -13,7 +13,8 @@ class Transaction extends Model
         'user_from',
         'currency_id',
         'type',
-        'status'
+        'status',
+        'amount'
     ];
 
     public function userFrom() {
