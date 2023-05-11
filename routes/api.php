@@ -24,7 +24,7 @@ Route::controller(UserController::class)->group(function() {
     Route::post('user/login', 'login');
 });
 
-Route::middleware('auth:sanctum')->controller(CurrencyValueController::class)->group(function() {
+Route::controller(CurrencyValueController::class)->group(function() {
     Route::get('currency_value', 'showAll');
     Route::get('currency_value/{name}', 'select');
     Route::get('currency_value/{name1}/{name2}/{amount}', 'convert');
