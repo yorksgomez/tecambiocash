@@ -56,11 +56,11 @@ class TransactionController extends BaseController
         $transactions = null;
 
         if($user->role == 'CLIENTE')
-            $transactions = Transaction::where('user_from', $user->id)->get();
+            $transactions = Transaction::with(['currency'])->where('user_from', $user->id)->get();
         elseif($user->role == 'CAJERO')
-            $transactions = Transaction::where('user_taker', $user->id)->get();
+            $transactions = Transaction::with(['currency'])->where('user_taker', $user->id)->get();
         elseif($user->role == 'ADMIN')
-            $transactions = Transaction::get();
+            $transactions = Transaction::with(['currency'])->get();
 
         return $this->sendResponse($transactions, "OK");
     }
