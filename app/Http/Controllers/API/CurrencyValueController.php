@@ -14,7 +14,7 @@ class CurrencyValueController extends BaseController
 {
     
     public function showAll() {
-        return CurrencyValue::get('name');
+        return CurrencyValue::get();
     }
 
     public function select(String $name) {
