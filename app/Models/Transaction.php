@@ -17,13 +17,13 @@ class Transaction extends Model
         'amount',
         'voucher'
     ];
-    
+
     public function userFrom() {
         return $this->hasOne(User::class, 'id', 'user_from');
     }
 
     public function currency() {
-        return $this->hasOne(CurrencyValue::class, 'id', 'currency');
+        return $this->hasOne(CurrencyValue::class, 'id', 'currency_id');
     }
 
     public function userTaker() {
