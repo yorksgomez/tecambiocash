@@ -95,7 +95,6 @@ class UserController extends BaseController
 
     public function showCustomers(Request $request) {
         $users = User::where('role', 'CLIENTE ');
-        $users->roleable();
         return $users->get();
     }
 
