@@ -17,7 +17,7 @@ class Transaction extends Model
         'amount',
         'voucher'
     ];
-
+    
     public function userFrom() {
         return $this->hasOne(User::class, 'id', 'user_from');
     }

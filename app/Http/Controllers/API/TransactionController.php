@@ -67,6 +67,7 @@ class TransactionController extends BaseController
 
     public function showWaiting() {
         $transactions = Transaction::where('status', 'ESPERA')->get();
+        $transactions->currency();
         return $this->sendResponse($transactions, "OK");
     }
         
