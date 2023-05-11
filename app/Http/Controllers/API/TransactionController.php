@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class TransactionController extends BaseController
@@ -23,7 +24,8 @@ class TransactionController extends BaseController
             'type' => 'required',
             'user_taker' => 'prohibited',
             'status' => 'prohibited',
-            'amount' => 'required'
+            'amount' => 'required',
+            'voucher' => 'required'
         ]);
 
         if($validator->fails())
@@ -31,6 +33,19 @@ class TransactionController extends BaseController
     
         $data['user_from'] = auth()->user()->id;
         $data['status'] = 'ESPERA';
+
+        $accepted_extensions = ['png', 'jpg', 'jpeg'];
+
+        $filename = time();
+        $voucher = $request->file('voucher');
+
+        if(!in_array($voucher->extension(), $accepted_extensions)) 
+            return $this->sendError("FILE_EXTENSION_NOT_VALID", [], 403);
+
+        $voucher_name = "$filename-doc." . $voucher->extension(); 
+        Storage::putFileAs("", $voucher, $voucher_name);
+
+        $data['voucher'] = $voucher_name;
 
         $transaction = Transaction::create($data);
         return $this->sendResponse("OK", "OK");
@@ -80,6 +95,18 @@ class TransactionController extends BaseController
         
         $transaction->save();
         return $this->sendResponse("OK", "OK");
+    }
+
+    public function showVoucherImage(int $id) {
+        $image = Transaction::find($id)->voucher;
+
+        return response(
+            Storage::get($image),
+            200,
+            [
+                "Content-Type" => Storage::mimeType($image)
+            ]
+        );
     }
 
 }

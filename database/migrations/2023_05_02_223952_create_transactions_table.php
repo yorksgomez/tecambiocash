@@ -21,6 +21,7 @@ return new class extends Migration
             $table->double("amount");
             $table->string("type");
             $table->string("status");
+            $table->string("voucher");
             $table->timestamps();
         });
     }

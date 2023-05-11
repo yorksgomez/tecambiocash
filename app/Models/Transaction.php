@@ -14,7 +14,8 @@ class Transaction extends Model
         'currency_id',
         'type',
         'status',
-        'amount'
+        'amount',
+        'voucher'
     ];
 
     public function userFrom() {
