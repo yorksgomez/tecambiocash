@@ -48,7 +48,7 @@ Route::middleware('auth:sanctum')->controller(TransactionController::class)->gro
     Route::post('transaction', 'create');
     Route::get('transaction', 'showAll');
     Route::get('transaction/waiting', 'showWaiting');
-    Route::put('transaction/{transaction_id}/take');
-    Route::put('transaction/{transaction_id}/complete');
+    Route::put('transaction/{transaction_id}/take', 'take');
+    Route::put('transaction/{transaction_id}/complete', 'complete');
     Route::get('transaction/{id}/voucher', 'showVoucherImage');
 });
