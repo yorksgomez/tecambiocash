@@ -9,6 +9,7 @@ use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -54,7 +55,7 @@ class TransactionController extends BaseController
     public function showAll() {
         $user = auth()->user();
         $transactions = null;
-
+        Log::info($user->role);
         if($user->role == 'CLIENTE')
             $transactions = Transaction::with(['currency'])->where('user_from', $user->id)->get();
         elseif($user->role == 'CAJERO')
