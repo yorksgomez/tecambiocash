@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
+use App\Models\BankAccount;
+use App\Models\CurrencyValue;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -74,7 +76,9 @@ class UserController extends BaseController
             'password' => 'required',
             'role' => 'prohibited',
             'role_id' => 'prohibited',
-            'state' => 'prohibited'
+            'state' => 'prohibited',
+            'account_name' => 'optional',
+            'identificator' => 'optional'
         ]);
 
         if($validator->fails())
@@ -85,7 +89,19 @@ class UserController extends BaseController
         $data['password'] = Hash::make($data['password']);
         $data['state'] = 'ACTIVE';
 
-        User::create($data);
+        $user = User::create($data);
+        
+        for($i = 0; $i < count($request->account_name); $i++) {
+            $account_id = CurrencyValue::where('name', $request->account_name[$i])->id;
+            $identificator = $request->identificator[$i];
+            
+            BankAccount::create([
+                'user_id' => $user->id,
+                'currency_value_id' => $account_id,
+                'identificator' => $identificator
+            ]);
+        }
+    
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
     }
 

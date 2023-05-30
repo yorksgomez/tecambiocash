@@ -55,7 +55,7 @@ class TransactionController extends BaseController
     public function showAll() {
         $user = auth()->user();
         $transactions = null;
-        Log::info($user->role);
+
         if($user->role == 'CLIENTE')
             $transactions = Transaction::with(['currency'])->where('user_from', $user->id)->get();
         elseif($user->role == 'CAJERO')

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\BankAccountController;
 use App\Http\Controllers\API\CurrencyValueController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\UserController;
@@ -52,4 +53,10 @@ Route::middleware('auth:sanctum')->controller(TransactionController::class)->gro
     Route::put('transaction/{transaction_id}/take', 'take');
     Route::put('transaction/{transaction_id}/complete', 'complete');
     Route::get('transaction/{id}/voucher', 'showVoucherImage');
+});
+
+Route::middleware('auth:sanctum')->controller(BankAccountController::class)->group(function() {
+    Route::post('account', 'create');
+    Route::get('account', 'showAll');
+    Route::put('account/{id}', 'update');
 });
