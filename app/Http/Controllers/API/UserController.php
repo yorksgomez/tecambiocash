@@ -94,6 +94,7 @@ class UserController extends BaseController
         $data['state'] = 'ACTIVE';
 
         $user = User::create($data);
+        Log::info($request);
         $controller = new BankAccountController;
         $controller->createFromArrays($request);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
