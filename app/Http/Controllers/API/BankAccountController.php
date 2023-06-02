@@ -67,10 +67,10 @@ class BankAccountController extends BaseController
         return $this->sendResponse("OK", "OK");
     }
 
-    public function createFromArrays(Request $request) {
+    public function createFromArrays(Request $request, User $user) {
         
         for($i = 0; $i < count($request->account_name); $i++) {
-            $account_id = CurrencyValue::where('name', $request->account_name[$i])->id;
+            $account_id = CurrencyValue::where('name', $request->account_name[$i])->first()->id;
             $identificator = $request->identificator[$i];
             
             BankAccount::create([
