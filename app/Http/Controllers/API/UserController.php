@@ -81,8 +81,8 @@ class UserController extends BaseController
             'role' => 'prohibited',
             'role_id' => 'prohibited',
             'state' => 'prohibited',
-            'account_name' => 'optional',
-            'identificator' => 'optional'
+            'account_name' => 'nullable',
+            'identificator' => 'nullable'
         ]);
 
         if($validator->fails())
