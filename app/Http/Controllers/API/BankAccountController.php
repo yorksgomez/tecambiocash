@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
 use App\Models\BankAccount;
+use App\Models\CurrencyValue;
 use App\Models\Customer;
 use App\Models\User;
 use BackedEnum;
@@ -64,6 +65,21 @@ class BankAccountController extends BaseController
 
         BankAccount::find($id)->update($data);
         return $this->sendResponse("OK", "OK");
+    }
+
+    public function createFromArrays(Request $request) {
+        
+        for($i = 0; $i < count($request->account_name); $i++) {
+            $account_id = CurrencyValue::where('name', $request->account_name[$i])->id;
+            $identificator = $request->identificator[$i];
+            
+            BankAccount::create([
+                'user_id' => $user->id,
+                'currency_value_id' => $account_id,
+                'identificator' => $identificator
+            ]);
+        }
+
     }
 
 }

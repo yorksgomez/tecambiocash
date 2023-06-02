@@ -63,6 +63,8 @@ class UserController extends BaseController
         $data['role_id'] = $customer->id;
 
         User::create($data);
+        $controller = new BankAccountController;
+        $controller->createFromArrays($request);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
     }
 
@@ -90,18 +92,8 @@ class UserController extends BaseController
         $data['state'] = 'ACTIVE';
 
         $user = User::create($data);
-        
-        for($i = 0; $i < count($request->account_name); $i++) {
-            $account_id = CurrencyValue::where('name', $request->account_name[$i])->id;
-            $identificator = $request->identificator[$i];
-            
-            BankAccount::create([
-                'user_id' => $user->id,
-                'currency_value_id' => $account_id,
-                'identificator' => $identificator
-            ]);
-        }
-    
+        $controller = new BankAccountController;
+        $controller->createFromArrays($request);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
     }
 
