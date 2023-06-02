@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -64,6 +65,7 @@ class UserController extends BaseController
 
         User::create($data);
         $controller = new BankAccountController;
+        Log::info($request);
         $controller->createFromArrays($request);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
     }
