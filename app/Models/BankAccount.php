@@ -17,11 +17,11 @@ class BankAccount extends Model
     ];
 
     public function user() : BelongsTo {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function currency() : BelongsTo {
-        return $this->belongsTo(CurrencyValue::class);
+        return $this->belongsTo(CurrencyValue::class, 'currency_value_id');
     }
 
 }
