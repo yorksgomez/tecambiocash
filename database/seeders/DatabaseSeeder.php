@@ -32,8 +32,8 @@ class DatabaseSeeder extends Seeder
             'state' => "ACTIVE"
         ])->save();
         
-        CurrencyValue::make(['name' => 'Paypal', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'TCS', 'value' => 1])->save();
+        CurrencyValue::make(['name' => 'Paypal', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Advcash', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Bancolombia', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Banesco Venezuela', 'value' => 0])->save();

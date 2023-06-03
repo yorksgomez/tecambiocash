@@ -39,11 +39,11 @@ class BankAccountController extends BaseController
         $accounts = null;
 
         if($user->role == 'CLIENTE')
-            $accounts = BankAccount::with(['user', 'currency'])->where('user_id', $user->id)->get();
+            $accounts = BankAccount::with(['currency'])->where('user_id', $user->id)->get();
         elseif($user->role == 'CAJERO')
-            $accounts = BankAccount::with(['user', 'currency'])->where('user_id', $user->id)->get();
+            $accounts = BankAccount::with(['currency'])->where('user_id', $user->id)->get();
         elseif($user->role == 'ADMIN')
-            $accounts = BankAccount::with(['user', 'currency'])->get();
+            $accounts = BankAccount::with(['currency'])->get();
 
         return $this->sendResponse($accounts, "OK");
     }
