@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class BankAccount extends Model
 {
@@ -16,12 +16,12 @@ class BankAccount extends Model
         'identificator'
     ];
 
-    public function user() : HasOne {
-        return $this->hasOne(User::class);
+    public function user() : BelongsTo {
+        return $this->belongsTo(User::class);
     }
 
-    public function currency() : HasOne {
-        return $this->hasOne(CurrencyValue::class);
+    public function currency() : BelongsTo {
+        return $this->belongsTo(CurrencyValue::class);
     }
 
 }
