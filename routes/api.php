@@ -60,5 +60,6 @@ Route::middleware('auth:sanctum')->controller(BankAccountController::class)->gro
     Route::post('account', 'create');
     Route::get('account', 'showAll');
     Route::put('account/{id}', 'update');
+    Route::delete('account/{id}', 'remove');
     Route::get('account/email/{email}', 'findByUserMail');
 });

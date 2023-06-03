@@ -20,15 +20,15 @@ class BankAccountController extends BaseController
         $user = auth()->user();
 
         $validator = Validator::make($data, [
-            'user_id' => 'prohibited',
-            'currency_value_id' => 'required',
+            'user_id' => 'required',
+            'currency' => 'required',
             'identificator' => 'required'
         ]);
 
+        $data['currency_value_id'] = CurrencyValue::where('name', $data['currency'])->first();
+
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
-
-        $data['user_id'] = $user->id;
 
         BankAccount::create($data);
         return $this->sendResponse("OK", "OK");
@@ -80,6 +80,11 @@ class BankAccountController extends BaseController
             ]);
         }
 
+    }
+
+    public function remove(int $id) {
+        BankAccount::find($id)->delete();
+        return $this->sendResponse("OK", "OK");
     }
 
     public function findByUserMail($email) {

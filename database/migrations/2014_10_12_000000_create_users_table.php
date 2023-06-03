@@ -20,6 +20,9 @@ return new class extends Migration
             $table->string('role');
             $table->string('role_id');
             $table->string('state');
+            $table->boolean('prestacash')->default(false);
+            $table->double('balance')->default(0);
+            $table->double('debt')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
