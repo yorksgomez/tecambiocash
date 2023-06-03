@@ -25,7 +25,7 @@ class BankAccountController extends BaseController
             'identificator' => 'required'
         ]);
 
-        $data['currency_value_id'] = CurrencyValue::where('name', $data['currency'])->first();
+        $data['currency_value_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
 
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
