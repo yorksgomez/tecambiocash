@@ -84,7 +84,7 @@ class BankAccountController extends BaseController
 
     public function findByUserMail($email) {
         $id = User::where('email', $email)->first()->id;
-        $accounts = BankAccount::where('user_id', $id)->get();
+        $accounts = BankAccount::with(['currency'])->where('user_id', $id)->get();
         return $this->sendResponse($accounts, "OK");
     }
 
