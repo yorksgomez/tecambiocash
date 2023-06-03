@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(UserController::class)->group(function() {
     Route::post('user/create', 'create');
     Route::post('user/login', 'login');
+    Route::get('user/email/{email}', 'findByMail');
 });
 
 Route::controller(CurrencyValueController::class)->group(function() {
@@ -59,4 +60,5 @@ Route::middleware('auth:sanctum')->controller(BankAccountController::class)->gro
     Route::post('account', 'create');
     Route::get('account', 'showAll');
     Route::put('account/{id}', 'update');
+    Route::get('user/email/{email}', 'findByUserMail');
 });

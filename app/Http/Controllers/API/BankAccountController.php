@@ -43,7 +43,7 @@ class BankAccountController extends BaseController
         elseif($user->role == 'CAJERO')
             $accounts = BankAccount::with(['currency'])->where('user_id', $user->id)->get();
         elseif($user->role == 'ADMIN')
-            $accounts = BankAccount::with(['currency'])->get();
+            $accounts = [];
 
         return $this->sendResponse($accounts, "OK");
     }
@@ -80,6 +80,12 @@ class BankAccountController extends BaseController
             ]);
         }
 
+    }
+
+    public function findByUserMail($email) {
+        $id = User::where('email', $email)->first()->id;
+        $accounts = BankAccount::where('user_id', $id)->get();
+        return $this->sendResponse($accounts, "OK");
     }
 
 }
