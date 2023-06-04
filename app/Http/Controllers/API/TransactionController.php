@@ -17,7 +17,7 @@ class TransactionController extends BaseController
 {
 
     public function create(Request $request) {
-        $data = $request->all();
+        /*$data = $request->all();
 
         $validator = Validator::make($data, [
             'user_from' => 'prohibited',
@@ -48,7 +48,7 @@ class TransactionController extends BaseController
 
         $data['voucher'] = $voucher_name;
 
-        $transaction = Transaction::create($data);
+        $transaction = Transaction::create($data);*/
         return $this->sendResponse("OK", "OK");
     }
 

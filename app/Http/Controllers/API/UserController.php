@@ -65,7 +65,6 @@ class UserController extends BaseController
 
         $user = User::create($data);
         $controller = new BankAccountController;
-        Log::info($request);
         $controller->createFromArrays($request, $user);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
     }
@@ -94,7 +93,6 @@ class UserController extends BaseController
         $data['state'] = 'ACTIVE';
 
         $user = User::create($data);
-        Log::info($request);
         $controller = new BankAccountController;
         $controller->createFromArrays($request, $user);
         return $this->sendResponse("Usuario creado", "Usuario creado correctamente");
