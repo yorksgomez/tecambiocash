@@ -21,7 +21,7 @@ class TransactionController extends BaseController
 
         $validator = Validator::make($data, [
             'user_from' => 'prohibited',
-            'currency_id' => 'required',
+            'currency' => 'required',
             'type' => 'required',
             'user_taker' => 'prohibited',
             'status' => 'prohibited',
@@ -32,6 +32,8 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
+        $data['currency_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
+
         $data['user_from'] = auth()->user()->id;
         $data['status'] = 'ESPERA';
 
