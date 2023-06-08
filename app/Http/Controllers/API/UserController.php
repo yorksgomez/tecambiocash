@@ -154,6 +154,7 @@ class UserController extends BaseController
     }
 
     public function findByMail(string $email) {
+        sadmña;
         $user = User::where('email', $email)->first();
         return $this->sendResponse($user, "OK");
     }
