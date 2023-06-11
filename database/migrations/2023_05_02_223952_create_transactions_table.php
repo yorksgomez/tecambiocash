@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class, "user_from");
-            $table->foreignIdFor(CurrencyValue::class, "currency_id");
+            $table->foreignIdFor(CurrencyValue::class, "currency_from_id");
+            $table->foreignIdFor(CurrencyValue::class, "currency_to_id")->nullable();
             $table->foreignIdFor(User::class, "user_taker")->nullable();
             $table->double("amount");
             $table->string("type");
             $table->string("status");
-            $table->string("voucher");
+            $table->string("voucher")->nullable();
             $table->timestamps();
         });
     }

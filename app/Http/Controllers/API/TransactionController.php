@@ -17,26 +17,135 @@ class TransactionController extends BaseController
 {
 
     public function create(Request $request) {
+        $type = $request->type;
+
+        switch($type) {
+            case 'AGREGAR': return $this->createAddition($request);
+            case 'RETIRAR': return $this->createWithdraw($request);
+            case 'ENVIAR': return $this->createSend($request);
+            case 'INTERCAMBIAR': return $this->createExchange($request);
+        }
+
+    }
+
+    public function createWithdraw(Request $request) {
         $data = $request->all();
 
         $validator = Validator::make($data, [
             'user_from' => 'prohibited',
             'currency' => 'required',
-            'type' => 'required',
             'user_taker' => 'prohibited',
             'status' => 'prohibited',
-            'amount' => 'required',
-            'voucher' => 'required'
+            'amount' => 'required'
         ]);
 
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
-        $data['currency_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
+        $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
 
         $data['user_from'] = auth()->user()->id;
+        $data['user_taker'] = null;
         $data['status'] = 'ESPERA';
 
+        $transaction = Transaction::create($data);
+        return $this->sendResponse("OK", "OK");
+    }
+
+    public function createAddition(Request $request) {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'user_from' => 'prohibited',
+            'currency' => 'required',
+            'user_taker' => 'prohibited',
+            'status' => 'prohibited',
+            'amount' => 'required'
+        ]);
+
+        if($validator->fails())
+            return $this->sendError('Error de validación', $validator->errors(), 400);
+    
+        $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
+
+        $data['user_from'] = auth()->user()->id;
+        $data['user_taker'] = null;
+        $data['status'] = 'ESPERA';
+
+        $transaction = Transaction::create($data);
+        return $this->sendResponse("OK", "OK");
+    }
+
+    public function createSend(Request $request) {
+        $data = $request->all();
+        
+
+        $validator = Validator::make($data, [
+            'user_from' => 'prohibited',
+            'email' => 'required',
+            'status' => 'prohibited',
+            'user_taker' => 'prohibited',
+            'amount' => 'required'
+        ]);
+
+        if($validator->fails())
+            return $this->sendError('Error de validación', $validator->errors(), 400);
+
+        $user = auth()->user();
+        $taker = User::where('email', $data['email'])->first();
+
+        if($user->balance < $data['amount'])
+            return $this->sendError('Saldo insuficiente', 'Saldo insuficiente', 400);
+
+        $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
+
+        $data['user_from'] = $user->id;
+        $data['user_taker'] = $taker->id;
+        $data['status'] = "COMPLETA";
+
+        $transaction = Transaction::create($data);
+        $taker->balance += $data['amount'];
+        $taker->save();
+        return $this->sendResponse("OK", "OK");
+    }
+
+    public function createExchange(Request $request) {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'user_from' => 'prohibited',
+            'currency_from' => 'required',
+            'currency_to' => 'required',
+            'user_taker' => 'prohibited',
+            'status' => 'prohibited',
+            'amount' => 'required'
+        ]);
+
+        if($validator->fails())
+            return $this->sendError('Error de validación', $validator->errors(), 400);
+    
+        $data['currency_from_id'] = CurrencyValue::where('name', $data['currency_from'])->first()->id;
+        $data['currency_to_id'] = CurrencyValue::where('name', $data['currency_to'])->first()->id;
+
+        $data['user_from'] = auth()->user()->id;
+        $data['user_taker'] = null;
+        $data['status'] = 'ESPERA';
+
+        $transaction = Transaction::create($data);
+        return $this->sendResponse("OK", "OK");
+    }
+
+    public function addVoucher(Request $request, int $transaction_id) {
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'voucher' => 'required|file'
+        ]);
+
+        if($validator->fails())
+            return $this->sendError('Error de validación', $validator->errors(), 400);
+
+        $transaction = Transaction::find($transaction_id);
         $accepted_extensions = ['png', 'jpg', 'jpeg'];
 
         $filename = time();
@@ -48,10 +157,8 @@ class TransactionController extends BaseController
         $voucher_name = "$filename-doc." . $voucher->extension(); 
         Storage::putFileAs("", $voucher, $voucher_name);
 
-        $data['voucher'] = $voucher_name;
-
-        $transaction = Transaction::create($data);
-        return $this->sendResponse("OK", "OK");
+        $transaction->voucher = $voucher_name;
+        $transaction->save();
     }
 
     public function showAll() {
@@ -98,11 +205,41 @@ class TransactionController extends BaseController
         $user = auth()->user();
         $transaction = Transaction::find($transaction_id);
 
-        if($transaction->status == 'EN PROGRESO')
-            $transaction->status = 'COMPLETA';
-        
+        if($transaction->status != "EN PROGRESO")
+            return $this->sendError("TRANSACTION_NOT_IN_PROGRESS", "TRANSACTION_NOT_IN_PROGRESS", 400);
+
+        switch($transaction->type) {
+            case "ENVIAR": return $this->completeSend($transaction);
+            case "AGREGAR": return $this->completeAddition($transaction);
+            case "RETIRAR": return $this->completeWithdraw($transaction);
+            case "INTERCAMBIAR": return $this->completeExchange($transaction);
+        }
+
+    }
+
+    public function completeSend(Transaction $transaction) {
+        return $this->sendError('NOT_VALID_OPERATION', 'NOT_VALID_OPERATION', 400);
+    }
+
+    public function completeWithdraw(Transaction $transaction) {
+        $user = User::find($transaction->user_from); 
+        $transaction->status = 'COMPLETA';
         $transaction->save();
-        return $this->sendResponse("OK", "OK");
+        $user->balance -= $transaction->amount;
+        $user->save();
+    }
+
+    public function completeAddition(Transaction $transaction) {
+        $user = User::find($transaction->user_from); 
+        $transaction->status = 'COMPLETA';
+        $transaction->save();
+        $user->balance += $transaction->amount;
+        $user->save();
+    }
+
+    public function completeExchange(Transaction $transaction) {
+        $transaction->status = 'COMPLETA';
+        $transaction->save();
     }
 
     public function showVoucherImage(int $id) {

@@ -11,7 +11,9 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_from',
-        'currency_id',
+        'currency_from_id',
+        'currency_to_id',
+        'user_taker',
         'type',
         'status',
         'amount',
@@ -23,7 +25,11 @@ class Transaction extends Model
     }
 
     public function currency() {
-        return $this->hasOne(CurrencyValue::class, 'id', 'currency_id');
+        return $this->hasOne(CurrencyValue::class, 'id', 'currency_from_id');
+    }
+
+    public function currencyTo() {
+        return $this->hasOne(CurrencyValue::class, 'id', 'currency_to_id');
     }
 
     public function userTaker() {
