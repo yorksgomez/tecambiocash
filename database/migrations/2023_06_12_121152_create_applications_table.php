@@ -17,13 +17,11 @@ return new class extends Migration
             $table->string("lastname1");
             $table->string("phone1");
             $table->string("email1");
-            $table->string("name1");
             $table->string("relationship1");
             $table->string("name2");
             $table->string("lastname2");
             $table->string("phone2");
             $table->string("email2");
-            $table->string("name2");
             $table->string("relationship2");
             $table->string("status")->default("ESPERA");
             $table->timestamps();
