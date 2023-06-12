@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\API\ApplicationController;
 use App\Http\Controllers\API\BankAccountController;
+use App\Http\Controllers\API\ConfigurationController;
 use App\Http\Controllers\API\CurrencyValueController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\UserController;
@@ -64,4 +66,16 @@ Route::middleware('auth:sanctum')->controller(BankAccountController::class)->gro
     Route::delete('account/{id}', 'remove');
     Route::get('account/email/{email}', 'findByUserMail');
     Route::get('account/transaction/{transaction_id}', 'showTransactionTakerBanks');
+});
+
+Route::middleware('auth:sanctum')->controller(ApplicationController::class)->group(function() {
+    Route::post('application', 'create');
+    Route::get('application', 'showAll');
+    Route::put('application/{id}/accept', 'accept');
+    Route::put('application/{id}/decline', 'decline');
+});
+
+Route::middleware('auth:sanctum')->controller(ConfigurationController::class)->group(function() {
+    Route::get('config', 'show');
+    Route::put('config', 'update');
 });
