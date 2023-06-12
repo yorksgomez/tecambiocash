@@ -6,6 +6,7 @@ use App\Http\Controllers\API\BaseController;
 use App\Models\BankAccount;
 use App\Models\CurrencyValue;
 use App\Models\Customer;
+use App\Models\Transaction;
 use App\Models\User;
 use BackedEnum;
 use Illuminate\Http\Request;
@@ -80,6 +81,11 @@ class BankAccountController extends BaseController
             ]);
         }
 
+    }
+
+    public function showTransactionTakerBanks(int $transaction_id) {
+        $transaction = Transaction::find($transaction_id);
+        return BankAccount::with(['currency'])->where('user_id', $transaction->user_taker)->get();
     }
 
     public function remove(int $id) {
