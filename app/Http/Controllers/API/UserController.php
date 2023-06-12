@@ -153,6 +153,13 @@ class UserController extends BaseController
         );
     }
 
+    public function changePrestacash(int $user_id, float $prestacash) {
+        $user = User::find($user_id);
+        $user->prestacash = $prestacash;
+        $user->save();
+        return $this->sendResponse("OK", "");
+    }
+
     public function findByMail(string $email) {
         $user = User::where('email', $email)->first();
         return $this->sendResponse($user, "OK");

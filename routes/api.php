@@ -38,6 +38,7 @@ Route::middleware('auth:sanctum')->controller(UserController::class)->group(func
     Route::get('user/cashier', 'showCashiers');
     Route::get('user/customer', 'showCustomers');
     Route::put('user/{id}/enable', 'enableUser');
+    Route::put('user/{user_id}/prestacash/{prestacash}', 'changePrestacash');
     Route::get('user/{id}/doc-image', 'showUserDocImage');
     Route::get('user/{id}/image', 'showUserImage');
 });
