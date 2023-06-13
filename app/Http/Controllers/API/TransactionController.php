@@ -67,7 +67,8 @@ class TransactionController extends BaseController
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
-
+        Log::info("usuario");
+        Log::info(auth()->user());
         $data['user_from'] = auth()->user()->id;
         $data['user_taker'] = null;
         $data['status'] = 'ESPERA';
