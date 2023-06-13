@@ -35,6 +35,11 @@ Route::controller(CurrencyValueController::class)->group(function() {
 });
 
 //AUTH REQUIRED ROUTES
+
+Route::middleware("auth:sanctum")->get("user", function() {
+    return auth()->user();
+});
+
 Route::middleware('auth:sanctum')->controller(UserController::class)->group(function() {
     Route::post('user/cashier/create', 'createCashier');
     Route::get('user/cashier', 'showCashiers');
