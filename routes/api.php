@@ -64,7 +64,7 @@ Route::middleware('auth:sanctum')->controller(TransactionController::class)->gro
     Route::put('transaction/{transaction_id}/take', 'take');
     Route::put('transaction/{transaction_id}/complete', 'complete');
     Route::get('transaction/{id}/voucher', 'showVoucherImage');
-    Route::put('transaction/{transaction_id}/voucher', 'addVoucher');
+    Route::post('transaction/{transaction_id}/voucher', 'addVoucher');
 });
 
 Route::middleware('auth:sanctum')->controller(BankAccountController::class)->group(function() {
