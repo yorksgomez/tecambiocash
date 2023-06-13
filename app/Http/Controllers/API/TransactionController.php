@@ -158,6 +158,7 @@ class TransactionController extends BaseController
         Storage::putFileAs("", $voucher, $voucher_name);
 
         $transaction->voucher = $voucher_name;
+        $transaction->status = "PAGADA";
         $transaction->save();
     }
 
@@ -181,7 +182,7 @@ class TransactionController extends BaseController
     }
      
     public function showProcess() {
-        $transactions = Transaction::with(['currency'])->where('status', 'EN PROGRESO')->get();
+        $transactions = Transaction::with(['currency'])->where('status', 'EN PROGRESO')->orWhere('status', 'PAGADA')->get();
         return $this->sendResponse($transactions, "OK");
     }
 
@@ -205,7 +206,7 @@ class TransactionController extends BaseController
         $user = auth()->user();
         $transaction = Transaction::find($transaction_id);
 
-        if($transaction->status != "EN PROGRESO")
+        if($transaction->status != "PAGADA")
             return $this->sendError("TRANSACTION_NOT_IN_PROGRESS", "TRANSACTION_NOT_IN_PROGRESS", 400);
 
         switch($transaction->type) {
