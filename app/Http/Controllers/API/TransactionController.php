@@ -193,12 +193,13 @@ class TransactionController extends BaseController
     
         $in_progress = Transaction::where('user_taker', $user->id)->where('status', 'EN PROGRESO')->count();
 
-        if($in_progress > 0)
+        if($in_progress > 5)
             return $this->sendError("HAS_IN_PROGRESS");
 
         if($transaction->status == 'ESPERA')
             $transaction->status = 'EN PROGRESO';
         
+        $transaction->user_taker = $user->id;
         $transaction->save();
         return $this->sendResponse("OK", "OK");
     }
