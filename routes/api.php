@@ -40,7 +40,9 @@ Route::middleware('auth:sanctum')->controller(UserController::class)->group(func
     Route::get('user/cashier', 'showCashiers');
     Route::get('user/customer', 'showCustomers');
     Route::put('user/{id}/enable', 'enableUser');
+    Route::put('user/prestacash/add/{amount}', 'addPrestacash');
     Route::put('user/{user_id}/prestacash/{prestacash}', 'changePrestacash');
+    Route::put('user/{user_id}/balance/{balance}', 'changeBalance');
     Route::get('user/{id}/doc-image', 'showUserDocImage');
     Route::get('user/{id}/image', 'showUserImage');
 });
@@ -57,6 +59,7 @@ Route::middleware('auth:sanctum')->controller(TransactionController::class)->gro
     Route::put('transaction/{transaction_id}/take', 'take');
     Route::put('transaction/{transaction_id}/complete', 'complete');
     Route::get('transaction/{id}/voucher', 'showVoucherImage');
+    Route::put('transaction/{transaction_id}/voucher', 'addVoucher');
 });
 
 Route::middleware('auth:sanctum')->controller(BankAccountController::class)->group(function() {

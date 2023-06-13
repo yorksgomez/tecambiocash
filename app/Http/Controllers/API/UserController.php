@@ -160,9 +160,29 @@ class UserController extends BaseController
         return $this->sendResponse("OK", "");
     }
 
+    public function changeBalance(int $user_id, float $balance) {
+        $user = User::find($user_id);
+        $user->balance = $balance;
+        $user->save();
+        return $this->sendResponse("OK", "");
+    }
+
     public function findByMail(string $email) {
         $user = User::where('email', $email)->first();
         return $this->sendResponse($user, "OK");
+    }
+
+    public function addPrestacash(float $amount) {
+        $user = User::find(auth()->user()->id);
+
+        if($amount <= $user->prestacash) {
+            $user->debt += $amount;
+            $user->balance += $amount;
+            $user->save();
+            return $this->sendResponse("OK", "OK");
+        } else {
+            return $this->sendResponse("NOT_VALID_AMOUNT", "NOT_VALID_AMOUNT");
+        }
     }
 
 }
