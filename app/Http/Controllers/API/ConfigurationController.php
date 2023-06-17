@@ -22,6 +22,7 @@ class ConfigurationController extends BaseController
         $data = $request->all();
         $config = Configuration::find(1);
         $config->update($data);
+        $config->save();
         return $this->sendResponse("OK", "OK");
     }
 
