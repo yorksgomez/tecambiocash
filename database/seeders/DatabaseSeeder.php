@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Configuration;
 use App\Models\CurrencyValue;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -53,5 +54,12 @@ class DatabaseSeeder extends Seeder
         CurrencyValue::make(['name' => 'Scotibank', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Banesco Panama', 'value' => 0])->save();
         CurrencyValue::make(['name' => 'Banco Venezuela', 'value' => 0])->save();
+
+        Configuration::make([
+            "comission_in" => 0,
+            "comission_out" => 0,
+            "comission_exchange" => 0,
+            "comission_cashier" => 0,
+        ])->save();
     }
 }

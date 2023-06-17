@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->double("comission_in")->default(0);
             $table->double("comission_out")->default(0);
-            $table->double("comission_exchange")->default(0);    
+            $table->double("comission_exchange")->default(0);
+            $table->double("comission_cashier")->default(0);    
             $table->timestamps();
         });
     }

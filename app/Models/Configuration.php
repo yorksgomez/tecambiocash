@@ -12,7 +12,8 @@ class Configuration extends Model
     protected $fillable = [
         "comission_in",
         "comission_out",
-        "comission_exchange"
+        "comission_exchange",
+        "comission_cashier"
     ];
 
 }
