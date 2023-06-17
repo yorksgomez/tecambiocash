@@ -9,6 +9,7 @@ use App\Models\CurrencyValue;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class ConfigurationController extends BaseController
@@ -19,6 +20,7 @@ class ConfigurationController extends BaseController
     }
 
     public function update(Request $request) {
+        Log::info($request);
         $data = $request->all();
         $config = Configuration::find(1);
         $config->update($data);
