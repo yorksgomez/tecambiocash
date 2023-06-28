@@ -23,15 +23,15 @@ class CurrencyValue extends Model
         $comission = $config->comission_exchange;
 
         //IS WITHDRAW
-        if($currency1->id == 1) $comission = $config->comission_out;
+        if($currency2->id == 1) $comission = $config->comission_out;
         
         //IS ADDITION
-        if($currency2->id == 1) $comission = $config->comission_in;
+        if($currency1->id == 1) $comission = $config->comission_in;
 
         $converted = $currency1->value * $amount / $currency2->value;
         $comission = $converted * $comission / 100;
         $total = $converted - $comission;
-        return ['net' => $converted, 'comission' => $comission, 'total' => $total];
+        return ['net' => round($converted, 3), 'comission' => round($comission, 3), 'total' => round($total, 3)];
     }
 
 }
