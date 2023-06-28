@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
+use App\Models\Configuration;
 use App\Models\CurrencyValue;
 use App\Models\Customer;
 use App\Models\User;
@@ -41,11 +42,7 @@ class CurrencyValueController extends BaseController
     }
 
     public function convert(String $name1, String $name2, Float $amount) {
-        $currency1 = CurrencyValue::where('name', $name1)->first();
-        $currency2 = CurrencyValue::where('name', $name2)->first();
-
-        $converted = $currency1->value * $amount / $currency2->value;
-        return $this->sendResponse($converted, "Conversión hecha correctamente");
+        return $this->sendResponse(CurrencyValue::convert($name1, $name2, $amount), "Conversión hecha correctamente");
     }
 
 }

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->foreignIdFor(CurrencyValue::class, "currency_to_id")->nullable();
             $table->foreignIdFor(User::class, "user_taker")->nullable();
             $table->double("amount");
+            $table->double("total");
+            $table->double("comission");
             $table->string("type");
             $table->string("status");
             $table->string("voucher")->nullable();

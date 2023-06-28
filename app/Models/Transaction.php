@@ -16,6 +16,8 @@ class Transaction extends Model
         'user_taker',
         'type',
         'status',
+        'total',
+        'comission',
         'amount',
         'voucher'
     ];

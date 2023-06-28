@@ -4,12 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
 use App\Models\CurrencyValue;
-use App\Models\Customer;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -42,11 +39,16 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
+        $convertion = CurrencyValue::convertCurrency("TCS", $data['currency']);
+        $data['comission'] = $convertion['comission'];
+        $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
 
         $data['user_from'] = auth()->user()->id;
         $data['user_taker'] = null;
         $data['status'] = 'ESPERA';
+
+        
 
         $transaction = Transaction::create($data);
         return $this->sendResponse("OK", "OK");
@@ -66,9 +68,11 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
+        $convertion = CurrencyValue::convertCurrency($data['currency'], "TCS");
+        $data['comission'] = $convertion['comission'];
+        $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
-        Log::info("usuario");
-        Log::info(auth()->user());
+
         $data['user_from'] = auth()->user()->id;
         $data['user_taker'] = null;
         $data['status'] = 'ESPERA';
@@ -125,6 +129,9 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
+        $convertion = CurrencyValue::convertCurrency($data['currency_from'], $data['currency_to']);
+        $data['comission'] = $convertion['comission'];
+        $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency_from'])->first()->id;
         $data['currency_to_id'] = CurrencyValue::where('name', $data['currency_to'])->first()->id;
 
@@ -236,7 +243,7 @@ class TransactionController extends BaseController
         $user = User::find($transaction->user_from); 
         $transaction->status = 'COMPLETA';
         $transaction->save();
-        $user->balance += $transaction->amount;
+        $user->balance += $transaction->total;
         $user->save();
     }
 
