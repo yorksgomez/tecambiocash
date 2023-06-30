@@ -39,7 +39,7 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
-        $convertion = CurrencyValue::convertCurrency("TCS", $data['currency']);
+        $convertion = CurrencyValue::convert("TCS", $data['currency'], $data['amount']);
         $data['comission'] = $convertion['comission'];
         $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
@@ -68,7 +68,7 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
-        $convertion = CurrencyValue::convertCurrency($data['currency'], "TCS");
+        $convertion = CurrencyValue::convert($data['currency'], "TCS", $data['amount']);
         $data['comission'] = $convertion['comission'];
         $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
@@ -129,7 +129,7 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
     
-        $convertion = CurrencyValue::convertCurrency($data['currency_from'], $data['currency_to']);
+        $convertion = CurrencyValue::convert($data['currency_from'], $data['currency_to'], $data['amount']);
         $data['comission'] = $convertion['comission'];
         $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency_from'])->first()->id;

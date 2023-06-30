@@ -175,7 +175,7 @@ class UserController extends BaseController
     public function addPrestacash(float $amount) {
         $user = User::find(auth()->user()->id);
 
-        if($amount <= $user->prestacash) {
+        if($amount + $user->debt <= $user->prestacash) {
             $user->debt += $amount;
             $user->balance += $amount;
             $user->save();
