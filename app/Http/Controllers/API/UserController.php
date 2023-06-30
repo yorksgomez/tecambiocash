@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends BaseController
 {
+
+    public function current() {
+        return auth()->user();
+    }
     
     public function create(Request $request) {
         $data = $request->all();

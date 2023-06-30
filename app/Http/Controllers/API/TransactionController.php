@@ -96,7 +96,7 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
 
-        $user = auth()->user();
+        $user = User::find(auth()->user()->id);
         $taker = User::where('email', $data['email'])->first();
 
         if($user->balance < $data['amount'])
@@ -109,7 +109,9 @@ class TransactionController extends BaseController
         $data['status'] = "COMPLETA";
 
         $transaction = Transaction::create($data);
+
         $user->balance -= $data['amount'];
+        $user->save();
         $taker->balance += $data['amount'];
         $taker->save();
         return $this->sendResponse("OK", "OK");
