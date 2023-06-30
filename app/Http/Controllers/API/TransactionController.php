@@ -102,13 +102,14 @@ class TransactionController extends BaseController
         if($user->balance < $data['amount'])
             return $this->sendError('Saldo insuficiente', 'Saldo insuficiente', 400);
 
-        $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
+        $data['currency_from_id'] = 1;
 
         $data['user_from'] = $user->id;
         $data['user_taker'] = $taker->id;
         $data['status'] = "COMPLETA";
 
         $transaction = Transaction::create($data);
+        $user->balance -= $data['amount'];
         $taker->balance += $data['amount'];
         $taker->save();
         return $this->sendResponse("OK", "OK");
