@@ -168,6 +168,7 @@ class TransactionController extends BaseController
         $transaction->voucher = $voucher_name;
         $transaction->status = "PAGADA";
         $transaction->save();
+        return $this->sendResponse("OK", "OK");
     }
 
     public function showAll() {
@@ -237,6 +238,7 @@ class TransactionController extends BaseController
         $transaction->save();
         $user->balance -= $transaction->amount;
         $user->save();
+        return $this->sendResponse("OK", "OK");
     }
 
     public function completeAddition(Transaction $transaction) {
@@ -245,11 +247,13 @@ class TransactionController extends BaseController
         $transaction->save();
         $user->balance += $transaction->total;
         $user->save();
+        return $this->sendResponse("OK", "OK");
     }
 
     public function completeExchange(Transaction $transaction) {
         $transaction->status = 'COMPLETA';
         $transaction->save();
+        return $this->sendResponse("OK", "OK");
     }
 
     public function showVoucherImage(int $id) {
