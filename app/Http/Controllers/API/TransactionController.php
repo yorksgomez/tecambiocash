@@ -27,6 +27,7 @@ class TransactionController extends BaseController
 
     public function createWithdraw(Request $request) {
         $data = $request->all();
+        $user = auth()->user();
 
         $validator = Validator::make($data, [
             'user_from' => 'prohibited',
@@ -38,8 +39,12 @@ class TransactionController extends BaseController
 
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
-    
+
+        if($user->balance < $data['amount'])
+            return $this->sendError('Saldo insuficiente', "Saldo insuficiente");
+
         $convertion = CurrencyValue::convert("TCS", $data['currency'], $data['amount']);
+
         $data['comission'] = $convertion['comission'];
         $data['total'] = $convertion['total'];
         $data['currency_from_id'] = CurrencyValue::where('name', $data['currency'])->first()->id;
