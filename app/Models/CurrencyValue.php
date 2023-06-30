@@ -31,7 +31,7 @@ class CurrencyValue extends Model
         $converted = $currency2->value * $amount / $currency1->value;
         $comission = $converted * $comission / 100;
         $total = $converted - $comission;
-        return ['net' => number_format($converted, 4, '.', ''), 'comission' => number_format($comission, 4, '.', ''), 'total' => number_format($total, 4, '.', '')];
+        return ['net' => round($converted, 4), 'comission' => round($comission, 4), 'total' => round($total, 4)];
     }
 
 }
