@@ -18,7 +18,7 @@ class UserController extends BaseController
 {
 
     public function current() {
-        return auth()->user();
+        return $this->sendResponse(auth()->user(), "OK");
     }
     
     public function create(Request $request) {
