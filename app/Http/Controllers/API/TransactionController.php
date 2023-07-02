@@ -7,6 +7,7 @@ use App\Models\CurrencyValue;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +16,8 @@ class TransactionController extends BaseController
 
     public function create(Request $request) {
         $type = $request->type;
+
+        Log::info($request);
 
         switch($type) {
             case 'AGREGAR': return $this->createAddition($request);
