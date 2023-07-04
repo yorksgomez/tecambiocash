@@ -83,9 +83,9 @@ class BankAccountController extends BaseController
 
     }
 
-    public function showTransactionTakerBanks(int $transaction_id) {
-        $transaction = Transaction::find($transaction_id);
-        return $this->sendResponse(BankAccount::with(['currency'])->where('user_id', $transaction->user_taker)->get(), "OK");
+    public function showUserBanks(int $user_id) {
+        $user = User::find($user_id);
+        return $this->sendResponse(BankAccount::with(['currency'])->where('user_id', $user->id)->get(), "OK");
     }
 
     public function remove(int $id) {

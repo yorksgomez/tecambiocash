@@ -24,7 +24,8 @@ return new class extends Migration
             $table->double("comission")->default(0);
             $table->string("type");
             $table->string("status");
-            $table->string("voucher")->nullable();
+            $table->string("voucher_user")->nullable();
+            $table->string("voucher_cashier")->nullable();
             $table->timestamps();
         });
     }

@@ -18,8 +18,7 @@ class Transaction extends Model
         'status',
         'total',
         'comission',
-        'amount',
-        'voucher'
+        'amount'
     ];
 
     public function userFrom() {

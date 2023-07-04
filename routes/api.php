@@ -59,8 +59,10 @@ Route::middleware('auth:sanctum')->controller(TransactionController::class)->gro
     Route::get('transaction/process', 'showProcess');
     Route::put('transaction/{transaction_id}/take', 'take');
     Route::put('transaction/{transaction_id}/complete', 'complete');
-    Route::get('transaction/{id}/voucher', 'showVoucherImage');
-    Route::post('transaction/{transaction_id}/voucher', 'addVoucher');
+    Route::get('transaction/{id}/voucher-user', 'showVoucherUserImage');
+    Route::post('transaction/{transaction_id}/voucher-user', 'addVoucherUser');
+    Route::get('transaction/{id}/voucher-cashier', 'showVoucherCashierImage');
+    Route::post('transaction/{transaction_id}/voucher-cashier', 'addVoucherCashier');
 });
 
 Route::middleware('auth:sanctum')->controller(BankAccountController::class)->group(function() {
@@ -69,7 +71,7 @@ Route::middleware('auth:sanctum')->controller(BankAccountController::class)->gro
     Route::put('account/{id}', 'update');
     Route::delete('account/{id}', 'remove');
     Route::get('account/email/{email}', 'findByUserMail');
-    Route::get('account/transaction/{transaction_id}', 'showTransactionTakerBanks');
+    Route::get('account/user/{user_id}', 'showUserBanks');
 });
 
 Route::middleware('auth:sanctum')->controller(ApplicationController::class)->group(function() {
