@@ -16,11 +16,12 @@ class ConfigurationController extends BaseController
 {
 
     public function show() {
+        $this->authorize('viewAny', Configuration::class);
         return $this->sendResponse(Configuration::find(1), "OK");
     }
 
     public function update(Request $request) {
-        Log::info($request);
+        $this->authorize('update', Configuration::class);
         $data = $request->all();
         $config = Configuration::find(1);
         $config->update($data);

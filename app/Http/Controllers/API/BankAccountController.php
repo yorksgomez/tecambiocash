@@ -17,6 +17,7 @@ class BankAccountController extends BaseController
 {
     
     public function create(Request $request) {
+        $this->authorize('create', BankAccount::class);
         $data = $request->all();
         $user = auth()->user();
 
@@ -36,6 +37,7 @@ class BankAccountController extends BaseController
     }
 
     public function showAll() {
+        $this->authorize('viewAny', BankAccount::class);
         $user = auth()->user();
         $accounts = null;
 
@@ -50,6 +52,10 @@ class BankAccountController extends BaseController
     }
     
     public function update(Request $request, int $id) {
+        $account = BankAccount::find($id);
+
+        $this->authorize('update', $account);
+
         $data = $request->all();
         $user = auth()->user();
 
@@ -64,7 +70,8 @@ class BankAccountController extends BaseController
 
         $data['user_id'] = $user->id;
 
-        BankAccount::find($id)->update($data);
+        
+        $account->update($data);
         return $this->sendResponse("OK", "OK");
     }
 
@@ -83,20 +90,24 @@ class BankAccountController extends BaseController
 
     }
 
-    public function showUserBanks(int $user_id) {
-        $user = User::find($user_id);
-        return $this->sendResponse(BankAccount::with(['currency'])->where('user_id', $user->id)->get(), "OK");
-    }
-
     public function remove(int $id) {
-        BankAccount::find($id)->delete();
+        $account = BankAccount::find($id);
+        $this->authorize('delete', BankAccount::class);
+        $account->delete();
         return $this->sendResponse("OK", "OK");
     }
 
     public function findByUserMail($email) {
+        $this->authorize('viewByMail', BankAccount::class);
         $id = User::where('email', $email)->first()->id;
         $accounts = BankAccount::with(['currency'])->where('user_id', $id)->get();
         return $this->sendResponse($accounts, "OK");
+    }
+
+    public function showUserBanks(int $user_id) {
+        $user = User::find($user_id);
+        $this->authorize('viewUserBanks', [BankAccount::class, $user]);
+        return $this->sendResponse(BankAccount::with(['currency'])->where('user_id', $user->id)->get(), "OK");
     }
 
 }

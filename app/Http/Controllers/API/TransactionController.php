@@ -26,6 +26,7 @@ class TransactionController extends BaseController
     }
 
     public function createWithdraw(Request $request) {
+        $this->authorize('createWithdraw', Transaction::class);
         $data = $request->all();
         $user = auth()->user();
 
@@ -60,6 +61,7 @@ class TransactionController extends BaseController
     }
 
     public function createAddition(Request $request) {
+        $this->authorize('createAddition', Transaction::class);
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -87,9 +89,9 @@ class TransactionController extends BaseController
     }
 
     public function createSend(Request $request) {
+        $this->authorize('createSend', Transaction::class);
         $data = $request->all();
         
-
         $validator = Validator::make($data, [
             'user_from' => 'prohibited',
             'email' => 'required',
@@ -123,6 +125,7 @@ class TransactionController extends BaseController
     }
 
     public function createExchange(Request $request) {
+        $this->authorize('createExchange', Transaction::class);
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -152,6 +155,9 @@ class TransactionController extends BaseController
     }
 
     public function addVoucherUser(Request $request, int $transaction_id) {
+        $transaction = Transaction::find($transaction_id);
+        $this->authorize('addVoucherUser', $transaction);
+
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -161,7 +167,7 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
 
-        $transaction = Transaction::find($transaction_id);
+        
         $accepted_extensions = ['png', 'jpg', 'jpeg'];
 
         $filename = time();
@@ -181,6 +187,9 @@ class TransactionController extends BaseController
 
     public function addVoucherCashier(Request $request, int $transaction_id) {
         $data = $request->all();
+        $transaction = Transaction::find($transaction_id);
+
+        $this->authorize('addVoucherCashier', $transaction);
 
         $validator = Validator::make($data, [
             'voucher' => 'required|file'
@@ -189,7 +198,6 @@ class TransactionController extends BaseController
         if($validator->fails())
             return $this->sendError('Error de validación', $validator->errors(), 400);
 
-        $transaction = Transaction::find($transaction_id);
         $accepted_extensions = ['png', 'jpg', 'jpeg'];
 
         $filename = time();
@@ -208,6 +216,7 @@ class TransactionController extends BaseController
     }
 
     public function showAll() {
+        $this->authorize('viewOwn', Transaction::class);
         $user = auth()->user();
         $transactions = null;
 
@@ -222,22 +231,29 @@ class TransactionController extends BaseController
     }
 
     public function showWaiting() {
+        $this->authorize('viewWaiting', Transaction::class);
         $transactions = Transaction::with(['currency'])->where('status', 'ESPERA')->get();
         return $this->sendResponse($transactions, "OK");
     }
      
     public function showProcess() {
-        $transactions = Transaction::with(['currency'])->where('status', 'EN PROGRESO')->orWhere('status', 'PAGADA')->get();
+        $this->authorize('viewProcess', Transaction::class);
+        $transactions = Transaction::with(['currency'])->where([
+            ['status', 'in', ['EN PROGRESO', 'PAGADA']],
+            ['user_taker', auth()->user()->id]
+
+        ])->get();
         return $this->sendResponse($transactions, "OK");
     }
 
     public function take(int $transaction_id) {
-        $user = auth()->user();
         $transaction = Transaction::find($transaction_id);
+        $this->authorize('take', $transaction);
+        $user = User::find(auth()->user()->id);
     
         $in_progress = Transaction::where('user_taker', $user->id)->where('status', 'EN PROGRESO')->count();
 
-        if($in_progress > 5)
+        if($in_progress > 3)
             return $this->sendError("HAS_IN_PROGRESS");
 
         if($transaction->status == 'ESPERA')
@@ -245,6 +261,12 @@ class TransactionController extends BaseController
         
         $transaction->user_taker = $user->id;
         $transaction->save();
+
+        if($transaction->type == "AGREGAR") {
+            $user->balance -= $transaction->total;
+            $user->save();
+        }
+
         return $this->sendResponse("OK", "OK");
     }
 
@@ -269,6 +291,7 @@ class TransactionController extends BaseController
     }
 
     public function completeWithdraw(Transaction $transaction) {
+        $this->authorize('completeWithdraw', $transaction);
         $user = User::find($transaction->user_from); 
         $transaction->status = 'COMPLETA';
         $transaction->save();
@@ -278,6 +301,7 @@ class TransactionController extends BaseController
     }
 
     public function completeAddition(Transaction $transaction) {
+        $this->authorize('completeAddition', $transaction);
         $user = User::find($transaction->user_from); 
         $transaction->status = 'COMPLETA';
         $transaction->save();
@@ -287,13 +311,16 @@ class TransactionController extends BaseController
     }
 
     public function completeExchange(Transaction $transaction) {
+        $this->authorize('completeExchange', $transaction);
         $transaction->status = 'COMPLETA';
         $transaction->save();
         return $this->sendResponse("OK", "OK");
     }
 
     public function showVoucherUserImage(int $id) {
-        $image = Transaction::find($id)->voucher_user;
+        $transaction = Transaction::find($id);
+        $this->authorize('showVoucher', $transaction);
+        $image = $transaction->voucher_user;
 
         return response(
             Storage::get($image),
@@ -305,7 +332,9 @@ class TransactionController extends BaseController
     }
 
     public function showVoucherCashierImage(int $id) {
-        $image = Transaction::find($id)->voucher_cashier;
+        $transaction = Transaction::find($id);
+        $this->authorize('showVoucher', $transaction);
+        $image = $transaction->voucher_cashier;
 
         return response(
             Storage::get($image),

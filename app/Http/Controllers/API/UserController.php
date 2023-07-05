@@ -74,6 +74,7 @@ class UserController extends BaseController
     }
 
     public function createCashier(Request $request) {
+        $this->authorize('createCashier', User::class);
         $data = $request->all();
 
         $validator = Validator::make($data, [
@@ -103,10 +104,12 @@ class UserController extends BaseController
     }
 
     public function showCashiers(Request $request) {
+        $this->authorize('viewAny', User::class);
         return User::where('role', 'CAJERO')->get();
     }
 
     public function showCustomers(Request $request) {
+        $this->authorize('viewAny', User::class);
         $users = User::where('role', 'CLIENTE ');
         return $users->get();
     }
@@ -127,6 +130,7 @@ class UserController extends BaseController
     }
 
     public function enableUser(int $id) {
+        $this->authorize('enable', User::class);
         $user = User::find($id);
         $user->state = "ACTIVE";
         $user->save();
@@ -134,6 +138,7 @@ class UserController extends BaseController
     }
     
     public function showUserDocImage(int $id) {
+        $this->authorize('viewUserDoc', User::class);
         $image = Customer::find(User::find($id)->role_id)->doc_image;
 
         return response(
@@ -146,6 +151,7 @@ class UserController extends BaseController
     }
 
     public function showUserImage(int $id) {
+        $this->authorize('viewUserDoc', User::class);
         $image = Customer::find(User::find($id)->role_id)->customer_image;
 
         return response(
@@ -158,6 +164,7 @@ class UserController extends BaseController
     }
 
     public function changePrestacash(int $user_id, float $prestacash) {
+        $this->authorize('changePrestacash', User::class);
         $user = User::find($user_id);
         $user->prestacash = $prestacash;
         $user->save();
@@ -165,6 +172,7 @@ class UserController extends BaseController
     }
 
     public function changeBalance(int $user_id, float $balance) {
+        $this->authorize('changeBalance', User::class);
         $user = User::find($user_id);
         $user->balance = $balance;
         $user->save();
@@ -172,11 +180,13 @@ class UserController extends BaseController
     }
 
     public function findByMail(string $email) {
+        $this->authorize('findByMail', User::class);
         $user = User::where('email', $email)->first();
         return $this->sendResponse($user, "OK");
     }
 
     public function addPrestacash(float $amount) {
+        $this->authorize('addPrestacash', User::class);
         $user = User::find(auth()->user()->id);
 
         if($amount + $user->debt <= $user->prestacash) {

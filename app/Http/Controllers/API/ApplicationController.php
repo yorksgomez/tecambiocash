@@ -18,9 +18,10 @@ class ApplicationController extends BaseController
 {
     
     public function create(Request $request) {
+        $this->authorize('create', Application::class);
         $data = $request->all();
         $user = auth()->user();
-
+    
         $validator = Validator::make($data, [
             "name1" => 'required',
             "lastname1" => 'required',
@@ -46,6 +47,7 @@ class ApplicationController extends BaseController
     }
 
     public function showAll() {
+        $this->authorize('viewAny', Application::class);
         $user = auth()->user();
         $applications = null;
 
@@ -56,13 +58,15 @@ class ApplicationController extends BaseController
     }
     
     public function accept(int $id) {
+        $this->authorize('judge', Application::class);
         $application = Application::find($id);
-        $application->state = "APROVADO";
+        $application->state = "APROBADO";
         $application->save();
         return $this->sendResponse("OK", "OK");
     }
 
     public function decline(int $id) {
+        $this->authorize('judge', Application::class);
         $application = Application::find($id);
         $application->state = "APROVADO";
         $application->save();

@@ -3,12 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\BaseController;
-use App\Models\Configuration;
 use App\Models\CurrencyValue;
-use App\Models\Customer;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class CurrencyValueController extends BaseController
@@ -23,6 +19,7 @@ class CurrencyValueController extends BaseController
     }
     
     public function update(String $name, Request $request) {
+        $this->authorize('update', CurrencyValue::class);
         $data = $request->all();
         $currency = CurrencyValue::where('name', $name)->first();
 
