@@ -221,24 +221,24 @@ class TransactionController extends BaseController
         $transactions = null;
 
         if($user->role == 'CLIENTE')
-            $transactions = Transaction::with(['currency'])->where('user_from', $user->id)->get();
+            $transactions = Transaction::with(['currency', 'currencyTo'])->where('user_from', $user->id)->get();
         elseif($user->role == 'CAJERO')
-            $transactions = Transaction::with(['currency'])->where('user_taker', $user->id)->get();
+            $transactions = Transaction::with(['currency', 'currencyTo'])->where('user_taker', $user->id)->get();
         elseif($user->role == 'ADMIN')
-            $transactions = Transaction::with(['currency'])->get();
+            $transactions = Transaction::with(['currency', 'currencyTo'])->get();
 
         return $this->sendResponse($transactions, "OK");
     }
 
     public function showWaiting() {
         $this->authorize('viewWaiting', Transaction::class);
-        $transactions = Transaction::with(['currency'])->where('status', 'ESPERA')->get();
+        $transactions = Transaction::with(['currency', 'currencyTo'])->where('status', 'ESPERA')->get();
         return $this->sendResponse($transactions, "OK");
     }
      
     public function showProcess() {
         $this->authorize('viewProcess', Transaction::class);
-        $transactions = Transaction::with(['currency'])->where([
+        $transactions = Transaction::with(['currency', 'currencyTo'])->where([
             ['status', 'in', ['EN PROGRESO', 'PAGADA']],
             ['user_taker', auth()->user()->id]
 
